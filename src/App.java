@@ -1,65 +1,275 @@
 import java.util.Scanner;
 
 class Theater {
-    int theaterID = 10109;
+    int theaterID = 0001;
     String name = "CGV Sydney";
     String phoneNumber = "0499-502-201";
+    Movie [] movielist = new Movie[20];
+    int currentMovies=0;
+
     
     //constructor is the method with same name of class
     Theater(int ID, String name, String phonenumb){
-        theaterID = ID;
-        name = name;
-        phonenumb = phoneNumber;
+        this.theaterID = ID;
+        this.name = name;
+        this.phoneNumber = phonenumb;
     }
     
     int getID(){
         return this.theaterID;
-    }
-
+    }    
+    void setID(int input){
+        this.theaterID = input;
+    }   
     String getName(){
         return this.name;
     }
+    String setName(){
+        return this.name;
+    }   
+    String getphonenumb() {
+    	return this.phoneNumber;
+    }
+    String setphonenumb() {
+    	return this.phoneNumber;
+    }
 
+    void displaymovie(){
+        System.out.println("ID       roomname       moview name       time1       time2       time3");
+        for(int i = 0 ; i < currentMovies ; i++){
+            int moviewID =movielist[i].getmovieID();
+            String moviewname = movielist[i].getname();
+            String roomname = movielist[i].getroomname();
+            String movietime1 = movielist[i].gettime1();
+            String movietime2 = movielist[i].gettime2();
+            String movietime3 = movielist[i].gettime3();
+
+           System.out.println(moviewID +"    "+ moviewname+"    "+movietime1+"    "+movietime2+"    "+movietime3+"    ");
+        }
+    }
+
+    void addmovie(Movie movie)
+    {
+        this.movielist[currentMovies]=movie;
+        this.currentMovies++;
+    }
+}
+
+class room {
+    Theater masterTheater;
+
+    String name;
+    int roomID;
+    
+    String[][] seats = new String[8][8];
+	char column;
+	int colunmint;
+	int row1;
+
+	//       A  B  C  D  E  F  G  H
+	//    1 [] [] [] [] [] [] [] []
+	//    2 [] [] [] [] [] [] [] []
+	//    3 [] [] [] [] [] [] [] []
+	//    4 [] [] [] [] [] [] [] []
+	//    5 [] [] [] [] [] [] [] []
+	//    6 [] [] [] [] [] [] [] []
+	//    7 [] [] [] [] [] [] [] []
+	//    8 [] [] [] [] [] [] [] []
+    //    9 [] [] [] [] [] [] [] []
+    //    10 [] [] [] [] [] [] [] []
+
+    room(Theater masterTheater, String name, int roomID) {
+        setTheater(masterTheater);
+        setName(name);
+        setID(roomID);
+        initseats();
+        //displayseat();
+    }
+
+    public void initseats() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                seats[i][j] = "[0]";
+            }
+	    }
+    }
+
+	public void displayseat() {
+        System.out.println(" Welcome to " + this.name + "(" + this.roomID + ") room");
+		System.out.println("   A  B  C  D  E  F  G  H "); // display column
+	    for (int i = 0; i < 8; i++) {
+            System.out.print(i+1+" ");            
+		    for (int j = 0; j < 8; j++) {
+                System.out.print(seats[i][j]);
+		}
+        System.out.println();
+	    }
+    }
+
+    Theater getTheater(){
+        return this.masterTheater;
+    }
+    void setTheater(Theater masterTheater){
+        this.masterTheater = masterTheater;
+    }
+    int getID(){
+        return this.roomID;
+    }    
     void setID(int input){
-        theaterID = input;
+        this.roomID = input;
+    }   
+    String getName(){
+        return this.name;
+    }
+    void setName(String name){
+        this.name =name;
     }
     
-}
 
-class room{
-    String[][] seats = new String[8][10];
 }
 class Movie{
-    int MovieID = 1;
-    String Name = "Default Movie Name";
-    String Time1 = "00:00";
-    String Time2 = "00:00";
-    String Time3 = "00:00";
+    int movieID = 0101;
+    String name = "Frozen";
+    String time1 = "09:30";
+    String time2 = "12:30";
+    String time3 = "15:30";
+    room room;
 
-    Theater theater;
+    Movie(room room, int movieID, String name,String time1, String time2, String time3){
+        this.movieID = movieID;
+        this.name = name;
+        this.time1 = time1;
+        this.time2 = time2;
+        this.time3 = time3; 
+        this.room = room;
+        addtoMoviewList();
+    }
 
-    //make constructor
-    //constructor implementation is recommendation
+    int getmovieID() {
+    	return this.movieID;
+    }
+    void setmovieID(int movieID) {
+    	this.movieID = movieID;
+    }
+    String getname() {
+    	return this.name;
+    }
+    void setname(String name) {
+    	this.name=name;
+    }
+    String gettime1() {
+    	return this.time1;
+    }
+    void settime1(String time1) {
+    	this.time1=time1;
+    }
+    String gettime2() {
+    	return this.time2;
+    }
+    void settime2(String time2) {
+    	this.time2=time2;
+    }
+    String gettime3() {
+    	return this.time3;
+    }
+    void settime3(String time3) {
+    	this.time3=time3;
+    }
+    room getroom() {
+    	return this.room;
+    }
+    void setroom(room room) {
+    	this.room=room;
+    }
 
+    void addtoMoviewList(){
+        Theater myTheater = room.getTheater();
+        myTheater.addmovie(this);
+    }
 }
 
 class Booking{
-    //make constructor
-    //constructor implementation is recommendation
+    Movie movie;
+    int bookingID = 040421;
+    String SeatNumb = "A1";
+    
+    Booking(Movie movie, int bookingID, String seatNumb){
+        this.movie=movie;
+        this.bookingID = bookingID;
+        this.SeatNumb = seatNumb;
+    }
+    Movie getMovie(){
+        return this.movie;
+    }
+    void setMovie(Movie movie){
+        this.movie=movie;
+    }
+    int getbookingID() {
+    	return this.bookingID;
+    }
+    void setbookingID(int bookingID) {
+    	this.bookingID=bookingID;
+    }
+    String getseatNumb() {
+        return this.SeatNumb;
+    }
+    void setseatNumb(String SeatNumb) {
+    	this.SeatNumb=SeatNumb;
+    }
+   
 }
 
 public class App {
     public static void main(String[] args) throws Exception {
-    
-    Theater theater1 = new Theater(19192, "CGV_Melb", "0404-411-221");
+        int selectedMenu=0;
+        
+        //System Manager can add theater, room, moview //
+        Theater theater1 = new Theater(1000, "Sydney", "0404-434-112");
+        room room_1th_1= new room(theater1,"lion",1001);
+        room room_1th_2= new room(theater1,"rabbit",1002);
+        Movie movie1 = new Movie(room_1th_1, 1020, "Avengers", "9:30", "12:30", "15:30");
+        Movie movie2 = new Movie(room_1th_1, 1030, "Lord of Rings", "11:30", "15:30", "18:00");
+        Movie movie3 = new Movie(room_1th_2, 1040, "Frozen", "15:00", "14:30", "17:00");
+        ////////////////
 
-    int a = theater1.getID();    
-        System.out.println(a);
-    theater1.setID(10108);
+        System.out.println("--------------------------------------------------------");
+        System.out.println("______________ Wellcome to Moview Cinema ______________");
+        System.out.println("______________    1. Display Movies      ______________");
+        System.out.println("______________    2. Booking Movies      ______________");
+        System.out.println("______________          3. Exit          ______________");
+        System.out.println("--------------------------------------------------------");
+        System.out.println("Please select menu (number only): ");
+
+        Scanner sc = new Scanner(System.in);
+        try {
+            selectedMenu = sc.nextInt();
+        } catch (Exception e) {
+            System.out.println("Please insert right input. Number only allowed. For example, to select '3.' Exit, just insert '3'");
+        }
+
+        switch (selectedMenu) {
+            case 1:
+                System.out.println("______________    1. Display Movies      ______________");
+                theater1.displaymovie();
+                break;
+        
+            case 2:
+                System.out.println("______________    2. Booking Movies      ______________");
+                break;
+
+            case 3:
+                System.out.println("______________          3. Exit          ______________");
+                System.exit(0);
+                break;
+
+            default:
+                System.out.println("Please insert right input. number only allowed. For example, to select 3. Exit, just insert 3");
+                break;
+        }
+        
     
-    // reference
-    Movie movie1 = new Movie();
-    System.out.println(movie1.theater.theaterID);
+    }
+}
 
 
     // theater theater1 = new theater();
@@ -75,11 +285,6 @@ public class App {
     // theater1.displayinputseat();
     // //select your seat.
     // theater1.selectedseat();
-
-}
-}
-
-
 
 // class theater{
 //     boolean[][] seat = new boolean[8][10];

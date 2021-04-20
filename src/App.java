@@ -1,188 +1,140 @@
 import java.util.Scanner;
-
-class Theater {
-    int theaterID = 10109;
-    String name = "CGV Sydney";
-    String phoneNumber = "0499-502-201";
-    
-    //constructor is the method with same name of class
-    Theater(int ID, String name, String phonenumb){
-        theaterID = ID;
-        name = name;
-        phonenumb = phoneNumber;
-    }
-    
-    int getID(){
-        return this.theaterID;
-    }
-
-    String getName(){
-        return this.name;
-    }
-
-    void setID(int input){
-        theaterID = input;
-    }
-    
-}
-
-class room{
-    String[][] seats = new String[8][10];
-}
-class Movie{
-    int MovieID = 1;
-    String Name = "Default Movie Name";
-    String Time1 = "00:00";
-    String Time2 = "00:00";
-    String Time3 = "00:00";
-
-    Theater theater;
-
-    //make constructor
-    //constructor implementation is recommendation
-
-}
-
-class Booking{
-    //make constructor
-    //constructor implementation is recommendation
-}
+import java.util.concurrent.ThreadLocalRandom;
 
 public class App {
     public static void main(String[] args) throws Exception {
-    
-    Theater theater1 = new Theater(19192, "CGV_Melb", "0404-411-221");
+        while(true){
+            int selectedMenu=0;
+            Manager manager = new Manager();
+            
+            System.out.println("--------------------------------------------------------");
+            System.out.println("______________ Wellcome to Moview Cinema ______________");
+            System.out.println("______________    1. Display Movies      ______________");
+            System.out.println("______________    2. Booking Movies      ______________");
+            System.out.println("______________          3. Exit          ______________");
+            System.out.println("--------------------------------------------------------");
+            System.out.println("Please select menu (number only): ");
 
-    int a = theater1.getID();    
-        System.out.println(a);
-    theater1.setID(10108);
-    
-    // reference
-    Movie movie1 = new Movie();
-    System.out.println(movie1.theater.theaterID);
+            Scanner sc = new Scanner(System.in);
+            try {
+                selectedMenu = sc.nextInt();
+            } catch (Exception e) {
+                System.out.println("Please insert right input. Number only allowed. For example, to select '3.' Exit, just insert '3'");
+            }
 
+            switch (selectedMenu) {
+                case 1:
+                    System.out.println("______________    1. Display Movies      ______________");
+                    manager.theater1.displaymovie();
+                    break;
+            
+                case 2:
+                    System.out.println("______________    2. Booking Movies      ______________");
+                    manager.theater1.displaymovie();
+                    //-------------------Select Movie-----------------------
+                    int selectedMovieID=0;
+                    System.out.println("select movie ID:");
+                    try {
+                        selectedMovieID = sc.nextInt();
+                        System.out.println("Your Movie : ID-"+selectedMovieID);
+                    } catch (Exception e) {
+                        System.out.println("Please insert right input. Number only allowed(4 digits)(without any characters, Special characters or spacing)");
+                        
+                    }
+                    
+                    //-------------------Select Time-----------------------
+                    System.out.println("select movie time(dd:dd):");
+                    String selectedTime = "";
+                    try {
+                        sc.nextLine();
+                        selectedTime = sc.nextLine();
+                        if(selectedTime.matches("\\d{2}:\\d{2}")){
+                            System.out.println("Your Movie : ID-"+selectedMovieID+", Time: "+selectedTime);
+                        }else{
+                            throw new IllegalAccessError();
+                        }
+                            
+                    } catch (Exception e) {
+                        System.out.println("Please insert right input.(dd:dd).");
+                    }
+                    //-------------------Select Seats-----------------------
+                    // get selected movie
+                    Movie selectedMovie =new Movie();
+                    if(manager.movie1.getmovieID() == selectedMovieID){
+                        selectedMovie=manager.movie1;
+                    }else if(manager.movie2.getmovieID() == selectedMovieID){
+                        selectedMovie=manager.movie2;
+                    }else if(manager.movie3.getmovieID() == selectedMovieID){
+                        selectedMovie=manager.movie3;
+                    }else{
+                        System.out.println("Something wrong");
+                    }
+                    
+                    // Display Room Seats status
+                    selectedMovie.getroom().displayseat();
 
-    // theater theater1 = new theater();
-    // theater theater2 = new theater();
+                    // Row selection
+                    System.out.println("select row (1~8):");
+                    int selectedrow=0;
+                    try {
+                        // sc.nextLine();
+                        selectedrow = sc.nextInt();
+                        // System.out.println("selectedrow="+selectedrow);
+                        if(selectedrow<1 || selectedrow >8){ //out of bound case
+                            throw new IllegalAccessError();
+                        }    
+                    } catch (Exception e) {
+                        System.out.println("Please insert right input.(just 1 number only).");
+                    }
 
-	// //initialize all seats
-    // theater1.initseat();
-    // //display all seat status.
-    // theater1.displayseat();
-    // //Choice seat and input seat.
-    // theater1.inputScanner();
-    // //display your input seat status.
-    // theater1.displayinputseat();
-    // //select your seat.
-    // theater1.selectedseat();
+                    // Column selection
+                    System.out.println("select column (A~H):");
+                    String selectedcolumn="";
+                    try {
+                        sc.nextLine();
+                        selectedcolumn = sc.nextLine();
+                        // System.out.println("[debug]selectedcolumn="+selectedcolumn);
+                        if(selectedcolumn.equals("A") || 
+                        selectedcolumn.equals("B") ||
+                        selectedcolumn.equals("C") ||
+                        selectedcolumn.equals("D") ||   
+                        selectedcolumn.equals("E") || 
+                        selectedcolumn.equals("F") || 
+                        selectedcolumn.equals("G") ||
+                        selectedcolumn.equals("H") || 
+                        selectedcolumn.equals("a") || 
+                        selectedcolumn.equals("b") || 
+                        selectedcolumn.equals("c") || 
+                        selectedcolumn.equals("d") || 
+                        selectedcolumn.equals("e") || 
+                        selectedcolumn.equals("f") || 
+                        selectedcolumn.equals("g") ||
+                        selectedcolumn.equals("h")){
+                            
+                        }else{
+                            throw new IllegalAccessError();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Please insert right input.(just 1 character only(A~H)).");
+                    }
 
+                    // create seatNumb
+                    String selectedseat = new String(selectedcolumn+Integer.toString(selectedrow));
+
+                    // Booking Creation
+                    int bookingID = ThreadLocalRandom.current().nextInt(104821, 999999+1);
+                    Booking booking = new Booking(selectedMovie, bookingID,selectedseat, selectedTime);
+                    break;
+
+                case 3:
+                    System.out.println("______________          3. Exit          ______________");
+                    System.exit(0);
+                    break;
+
+                default:
+                    System.out.println("Please insert right input. Number only allowed. For example, to select 3. Exit, just insert 3");
+                    break;
+            }
+        }
+    }
 }
-}
-
-
-
-// class theater{
-//     boolean[][] seat = new boolean[8][10];
-//     char column;
-//     int colunmint;
-//     int row1;
-
-//     //    A  B  C  D  E  F  G  H
-//     // 1 [] [] [] [] [] [] [] []
-//     // 2 [] [] [] [] [] [] [] []
-//     // 3 [] [] [] [] [] [] [] []
-//     // 4 [] [] [] [] [] [] [] []
-//     // 5 [] [] [] [] [] [] [] []
-//     // 6 [] [] [] [] [] [] [] []
-//     // 7 [] [] [] [] [] [] [] []
-//     // 8 [] [] [] [] [] [] [] []
-//     // 9 [] [] [] [] [] [] [] []
-//     // 10 [] [] [] [] [] [] [] []
-
-//     // initialise seat
-//     public void initseat(){
-//         for (int i = 0; i < 8; i++) {
-//             for (int j = 0; j < 10; j++) {
-//                 seat[i][j] = true;
-//             }
-//         }
-//     }
-
-//     // user input
-//     public void inputScanner() {
-//         Scanner sc = new Scanner(System.in);
-//         System.out.println("please enter seat colunm A~H :");
-//         String colunms = sc.nextLine();
-//         column = colunms.charAt(0);// get the first char of the string
-//         System.out.println("please enter seat row 1~10 :");
-//         row1 = sc.nextInt();
-//         sc.close();
-//     }
-
-//     // convert column string input into int
-//     public void columnconvert() {
-//         // int columnconvert = 0;
-        
-//         switch (column) {
-//             case 'A', 'a':
-//                 colunmint = 0;
-//                 break;
-//             case 'B', 'b':
-//                 colunmint = 1;
-//                 break;
-//             case 'C', 'c':
-//                 colunmint = 2;
-//                 break;
-//             case 'D', 'd':
-//                 colunmint = 3;
-//                 break;
-//             case 'E', 'e':
-//                 colunmint = 4;
-//                 break;
-//             case 'F', 'f':
-//                 colunmint = 5;
-//                 break;
-//             case 'G', 'g':
-//                 colunmint = 6;
-//                 break;
-//             case 'H', 'h':
-//                 colunmint = 7;
-//                 break;
-//         }
-//     }
-
-//     // change status of selected seat
-//     public void selectedseat() {
-//         columnconvert();
-//         if (seat[colunmint][row1 - 1] == true) {
-//             System.out.println("reservation completed!");
-//             seat[colunmint][row1 - 1] = false;
-//             displayseat();
-//         } else {
-//             System.out.println("Please try to select other seat.");
-//         }
-//     }
-    //show seat yog
-//     public void displayseat() {
-//         System.out.println("   A   B   C   D   E   F   G   H "); // display column
-//         for (int i = 0; i < 10; i++) {
-//             System.out.print(i + 1 + " "); // display row
-//             for (int j = 0; j < 8; j++) {
-//                 if (seat[j][i]) {
-//                     System.out.print("[o] ");
-//                 } else {
-//                     System.out.print("[x] ");
-//                 }
-//             }
-//             System.out.println();
-//         }
-//     }
-
-//     // utilize return & parameter -> make all functions as method and edit main
-//     // method to simple
-//     // display input seat
-//     public void displayinputseat() {
-//         System.out.println("your selection is " + column + row1);
-//     }
-
-// }
